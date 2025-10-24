@@ -1,5 +1,7 @@
 "use client";
+import Navbar from "./components/Navbar";
 import { useEffect, useState, FormEvent } from "react";
+
 
 interface Plant {
   _id?: string;
@@ -44,7 +46,9 @@ export default function HomePage() {
   };
 
   return (
+    
     <main style={{ textAlign: "center", padding: "20px" }}>
+      <Navbar />
       <h1>🌿 Nature Explorer — Plant Table</h1>
 
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>

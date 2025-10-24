@@ -1,0 +1,39 @@
+.navbar {
+  position: fixed;             /* 🧲 Keeps it stuck in place */
+  top: 0;                      /* Aligns to top of the page */
+  left: 0;                     /* Start from the left edge */
+  width: 100%;                 /* Stretches across the full screen */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #a1ff9c;
+  color: rgb(255, 255, 255);
+  z-index: 1000;               /* Keeps it on top of other elements */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Optional shadow */
+}
+
+.main-content {
+  padding-top: 70px; /* equal to navbar height + some space */
+}
+
+.nav-right {
+  display: flex;
+  gap: 24px;
+  padding-right: 5rem;
+}
+
+.nav-btn {
+  background-color: #00ff7f;
+  border: none;
+  color: #111;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.nav-btn:hover {
+  background-color: #00cc66;
+}
