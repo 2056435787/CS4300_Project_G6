@@ -1,0 +1,9 @@
+.register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* ✅ Full screen height so vertical centering works */
+  background: linear-gradient(to bottom right, #e8f5e9, #c8e6c9); /* Optional: nature vibe */
+  font-family: 'Poppins', sans-serif; /* Optional: clean font */
+  
+}
