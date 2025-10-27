@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { useState, FormEvent, ChangeEvent } from "react";
 
 interface RegisterInfo {
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -11,6 +12,7 @@ interface RegisterInfo {
 
 export default function Register() {
   const [formData, setFormData] = useState<RegisterInfo>({
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -21,45 +23,47 @@ export default function Register() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Register handler
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("❌ Passwords do not match!");
-      return;
+  if (formData.password !== formData.confirmPassword) {
+    alert("❌ Passwords do not match!");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // Show backend error message if available
+      const message = data?.message || data?.error || "Failed to register";
+      throw new Error(message);
     }
 
-    try {
-      const response = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+    alert("✅ Registration successful!");
+    console.log("Registered user:", data);
 
-      const data = await response.json();
+    // Reset form
+    setFormData({ name: "", email: "", password: "", confirmPassword: "" });
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to register");
-      }
+    // Optional redirect to login
+    window.location.href = "/login";
+  } catch (error: any) {
+    console.error("❌ Registration error:", error);
+    alert(`Registration failed: ${error.message}`);
+  }
+};
 
-      alert("✅ Registration successful!");
-      console.log("Registered:", data);
-
-      // Reset form
-      setFormData({ email: "", password: "", confirmPassword: "" });
-
-      // Optional redirect to login
-      window.location.href = "/login";
-      
-    } catch (error) {
-      console.error("❌ Registration error:", error);
-      alert("Registration failed. Please try again.");
-    }
-  };
 
   return (
     <>
@@ -70,6 +74,19 @@ export default function Register() {
           <p>Join our nature community and grow with us</p>
 
           <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Jane Doe"
+              />
+            </div>
+
             <div>
               <label htmlFor="email">Email</label>
               <input

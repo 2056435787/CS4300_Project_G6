@@ -1,29 +1,51 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation"; // ✅ Next.js built-in router
 import "../../css/navbar.css";
+import { useEffect, useState } from "react";
+import { isLoggedIn, logout, getUser } from "../../utils/auth";
 
-const Navbar = () => {
-  const router = useRouter();
+export default function Navbar() {
+  const [mounted, setMounted] = useState(false); // <-- track client mount
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    setMounted(true); // component is now mounted
+    const logged = isLoggedIn();
+    setLoggedIn(logged);
+    if (logged) setUser(getUser());
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setLoggedIn(false);
+    window.location.href = "/login";
+  };
+
+  if (!mounted) return null; // render nothing on server
 
   return (
-    <nav className="navbar">
-      <div className="nav-left">
-        <h2 className="logo" onClick={() => router.push("/")}>
-          Nature
-        </h2>
-      </div>
+    <>
+      <nav className="navbar">
+        <h3 style={{ paddingLeft: "5rem" }}>🌿 Nature Explorer</h3>
+        <div className="nav-right">
+          {loggedIn ? (
+            <>
+              <span>Welcome, {user?.name || "User"}</span>
+              <button onClick={handleLogout} className="nav-btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <a href="/login" className="nav-btn">Login</a>
+              <a href="/register" className="nav-btn">Register</a>
+            </>
+          )}
+        </div>
+      </nav>
 
-      <div className="nav-right">
-        <button className="nav-btn" onClick={() => router.push("/login")}>
-          Login
-        </button>
-        <button className="nav-btn" onClick={() => router.push("/register")}>
-          Register
-        </button>
-      </div>
-    </nav>
+      {/* Keeps content below navbar */}
+      <div className="main-content"></div>
+    </>
   );
-};
-
-export default Navbar;
+}
